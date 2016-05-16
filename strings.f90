@@ -1,49 +1,73 @@
-	MODULE strings
-	IMPLICIT none
+module strings
+implicit none
 
-	CONTAINS
+! String processing functions:
+!
+! strtok: tokenize a string on a delimeter, return array of tokens, 
+! length 0 when delimiter not found.
+!
+! ntoken: count number of tokens in string on a delimiter.  
+! Return 0 if delimiter not found.
+!
+! Tom Canich <tom@canich.net>  1 Jan 2016
+
+contains
 
 !
-!	Tokenize a string (str) on a supplied delimiter (token).
+!	Tokenize a string (str) on a supplied delimiter (delim).
 !	Return an array of tokenized words, of length 0 when no
 !	substrings present. 
 !
-	FUNCTION strtok (str,strlen,token,ntoken)
-		INTEGER	:: pos1 = 1, pos2, 	n = 0, i, strlen, ntoken
-		CHARACTER(LEN=strlen)		:: str
-		CHARACTER(LEN=strlen)		:: strtok(ntoken+1)
-		CHARACTER(1)			:: token
+pure function strtok (str,strlen,delim,ndelim)
+	integer	:: pos1, pos2, 	n, i
+	integer,intent(in) :: strlen, ndelim
+	character(len=strlen),intent(in) :: str
+	character(1),intent(in)	:: delim
+	character(len=strlen) :: strtok(ndelim+1)
 
-		DO 
-			pos2 = INDEX(str(pos1:), token)
-			IF (pos2 == 0) THEN
-				n = n + 1
-				strtok(n:strlen-pos1+1) = str(pos1:strlen)
-				EXIT
-			END IF
+	pos1 = 1
+	n = 0
+
+	do 
+		pos2 = index(str(pos1:), delim)
+		if (pos2 == 0) then
 			n = n + 1
-			strtok(n:n+pos1+pos2-2) = str(pos1:pos1+pos2-2)
-			pos1 = pos2+pos1
-		 END DO
+			strtok(n:strlen-pos1+1) = str(pos1:strlen)
+			exit
+		end if
+		n = n + 1
+		strtok(n:n+pos1+pos2-2) = str(pos1:pos1+pos2-2)
+		pos1 = pos2+pos1
+	 end do
 
-	END FUNCTION strtok 
+end function
 
-!	Calculate the number of tokens in a string, by delimiter token
+!	Calculate the number of tokens in a string, by delimiter
 
-	FUNCTION ntoken (str,strlen,token)
-		INTEGER	:: strlen, ntoken, i
-		CHARACTER*(*)	:: str
-		CHARACTER(1)		:: token
+pure function ntoken (str,strlen,delim)
+	integer,intent(in)	:: strlen
+	integer :: ntoken, i
+	character(:),allocatable,intent(in)	:: str
+	character(1),intent(in)	:: delim
 
-		ntoken = 0
+	ntoken = 0
 
-!       count number of tokens in str, to pass to strtok
-        DO i=0,strlen
-			IF (str(i:i) == token) THEN
-				ntoken = ntoken + 1
-			END IF
-        END DO
-	END FUNCTION ntoken
+    do i=1,strlen
+		! If this character is our delimiter, and the next character
+		! is also a delimiter, skip ahead to the next character.
+		if ((str(i:i) == delim) .and. (str(i+1:i+1) == delim)) then
+			cycle
+		end if
+		! If this character isn't the end of the string, and isn't
+		! our delimiter, go to the next character.  Otherwise,
+		! increment ntoken.
+		if ((str(i:i) /= delim) .and. (i /=strlen)) then
+			cycle
+		else
+			ntoken = ntoken + 1
+		end if
+    end do
+end function
 
 
-	END MODULE strings
+end module strings

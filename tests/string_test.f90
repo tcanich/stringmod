@@ -2,23 +2,22 @@
 	USE	strings
 	IMPLICIT none
 
-	CHARACTER*11	:: string = 'Foo,Bar,Baz'
-	CHARACTER*1		:: tok = ','
-	CHARACTER(LEN=3)	:: words(3)
-	INTEGER			:: i,strlen,n=0
+	CHARACTER(:),allocatable :: string1
+	CHARACTER(:),allocatable :: tok
+	CHARACTER(LEN=3) :: words(3)
+	INTEGER :: i,n=0
 
-	strlen = len(string)
+	string1 = 'Foo,Bar,Baz'
+	tok = ','
 
 !	count number of tokens in str, to pass to strtok
-	DO i=0,strlen
-		IF ( string(i) == tok ) THEN
-			n = n + 1
-		END IF
-	END DO
+	n = ntoken(string1,len(string1),tok)
 
-	write (*,*) ntoken(string,strlen,tok)
+	write (*,*) string1,tok,n
 
-!	words = strtok(string,strlen,tok,3)
+	write (*,*) ntoken(string1,len(string1),tok)
+
+	words = strtok(string1,len(string1),tok,n)
 
 	DO i=0,len(words)
 		write (*,*) words(i)

@@ -3,27 +3,41 @@
 	IMPLICIT none
 
 !	test ntoken function from string_module
-!	ntoken takes three arguments: str, strlen, token
-!	ntoken returns an integer: the number of token
+!	ntoken takes three arguments: str, strlen, delim
+!	ntoken returns an integer: the number of tokens
 !	in string.
 
-	CHARACTER*11	:: string1,string2*21,token*3
-	INTEGER			:: strlen,ntoken,i
+	CHARACTER(:),allocatable	:: string1,string2,string3,string4,delim
+	INTEGER			:: strlen,i
 
 	string1 = 'Foo:Bar:Baz'
-	token = ':'
+	delim = ':'
 	strlen = len(string1)
 
-	i = ntoken(string1,strlen,token)
+	i = ntoken(string1,strlen,delim)
 
 	write (*,*) 'There are ',i,' tokens in the string: ',string1,'.'
 
 	string2 = ' Foo,  Bar, Baz, Bat '
-	token = ', '
+	delim = ', '
 
-	i = ntoken(string2,len(string2),token)
+	i = ntoken(string2,len(string2),delim)
 
 	write (*,*) 'There are ',i,' tokens in the string: ',string2,'.'
+
+	string3 = 'Foo:Bar:Baz:::Bat'
+	delim = ':'
+	
+	i = ntoken(string3,len(string3),delim)
+	
+	write (*,*) 'There are ',i,' tokens in the string: ',string3,'.'
+
+	string4 = 'Foo:Bar:Baz:::'
+	delim = ':'
+	
+	i = ntoken(string4,len(string4),delim)
+	
+	write (*,*) 'There are ',i,' tokens in the string: ',string4,'.'
 
 	STOP
 	END PROGRAM ntoken_test

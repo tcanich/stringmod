@@ -1,25 +1,29 @@
-	PROGRAM strtok_test
-	USE strings
-	IMPLICIT none
+program strtok_test
+use strings
+implicit none
 
-!	Unit test for strtok function.
-!	strtok takes four arguments: str, strlen, token, ntoken
-!	Returns character array of tokenized elements of str
+! Unit test for strtok function.
+! strtok takes four arguments: str, strlen, token, ntoken
+! Returns character array of tokenized elements of str
+!
+! Tom Canich <tom@canich.net> 1 Jan 2016
 
-	CHARACTER*11	:: str,token*1
-	INTEGER			:: n,i
-	CHARACTER(LEN=3)	:: words(4)
+character(len=:),allocatable :: str,delim,words(:)
+integer :: n,i
 
-	str = 'Foo,Bar,Baz'
-	token = ','
+str = 'Foo,Bar,Baz'
+delim = ','
 
-	n = ntoken(str,len(str),token)
-	
-	words = strtok(str,len(str),token,n)
-	
-	DO i=0,4
-		write (*,*) words(i)
-	END DO
+n = ntoken(str,len(str),delim)
 
-	STOP
-	END PROGRAM strtok_test
+if ( .not. allocated(words)) then
+	allocate(character(len=len(str)) :: words(n+1))
+end if
+
+write (*,'(A,A,I3)') str,delim,n
+
+words = strtok(str,len(str),delim,n)
+
+write (*,*) words
+
+end program 
