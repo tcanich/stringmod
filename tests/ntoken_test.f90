@@ -8,34 +8,33 @@
 !	in string.
 
 	CHARACTER(:),allocatable	:: string1,string2,string3,string4,delim
-	INTEGER			:: strlen,i
+	INTEGER			:: i
 
 	string1 = 'Foo:Bar:Baz'
 	delim = ':'
-	strlen = len(string1)
 
-	i = ntoken(string1,strlen,delim)
+	i = ntoken(string1,delim)
 
 	write (*,*) 'There are ',i,' tokens in the string: ',string1,'.'
 
 	string2 = ' Foo,  Bar, Baz, Bat '
 	delim = ', '
 
-	i = ntoken(string2,len(string2),delim)
+	i = ntoken(string2,delim)
 
 	write (*,*) 'There are ',i,' tokens in the string: ',string2,'.'
 
 	string3 = 'Foo:Bar:Baz:::Bat'
 	delim = ':'
 	
-	i = ntoken(string3,len(string3),delim)
+	i = ntoken(string3,delim)
 	
 	write (*,*) 'There are ',i,' tokens in the string: ',string3,'.'
 
 	string4 = 'Foo:Bar:Baz:::'
 	delim = ':'
 	
-	i = ntoken(string4,len(string4),delim)
+	i = ntoken(string4,delim)
 	
 	write (*,*) 'There are ',i,' tokens in the string: ',string4,'.'
 

@@ -3,7 +3,7 @@ program teststrings
   implicit none
 
   integer,parameter :: ntoken_result=3,strtok_result=0
-  character(:),parameter :: to_upper_result="FOOBARBAZ",to_lower_result="foobarbaz"
+  character(:),allocatable :: to_upper_result,to_lower_result
   character(:),allocatable :: input_str,input_delim,tou_tol_input_str
   character(len=:),allocatable :: string_output
   integer :: output
@@ -20,6 +20,8 @@ program teststrings
   input_str = 'Foo:Bar:Baz'
   input_delim = ':'
   tou_tol_input_str = 'FooBArBaZ'
+  to_upper_result="FOOBARBAZ"
+  to_lower_result="foobarbaz"
 
 !
 ! ntoken test

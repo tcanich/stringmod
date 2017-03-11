@@ -8,21 +8,22 @@ implicit none
 !
 ! Tom Canich <tom@canich.net> 1 Jan 2016
 
-character(len=:),allocatable :: str,delim,words(:)
-integer :: n,i
+character(len=:),allocatable :: str,words(:)
+character(len=1) :: delim
+integer :: n
 
 str = 'Foo,Bar,Baz'
 delim = ','
 
-n = ntoken(str,len(str),delim)
+n = ntoken(str,delim)
 
 if ( .not. allocated(words)) then
-	allocate(character(len=len(str)) :: words(n+1))
+    allocate(character(len=len(str)) :: words(n))
 end if
 
 write (*,'(A,A,I3)') str,delim,n
 
-words = strtok(str,len(str),delim,n)
+words = strtok(str,delim)
 
 write (*,*) words
 
