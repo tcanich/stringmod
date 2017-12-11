@@ -1,7 +1,9 @@
 module strings
   implicit none
   private
-  public :: strtok, ntoken, to_upper, to_lower
+  public :: strtok, ntoken 
+  public :: to_upper, to_lower 
+  public :: rev
 
 
 ! String processing functions:
@@ -15,6 +17,8 @@ module strings
 ! to_upper: translate all lower case characters in string to upper case.
 !
 ! to_lower: translate all upper case characters in string to lower case. 
+!
+! rev: reverse character positions in string.
 !
 !
 ! Tom Canich <tom@canich.net>  1 Jan 2016
@@ -122,5 +126,19 @@ contains
       end do
   
   end function to_lower
+
+! Reverse a string
+  pure function rev (string)
+    character(len=:),allocatable,intent(in) :: string
+    character(len(string)) :: rev
+    integer :: i,lstring
+
+    lstring = len(string)
+
+    do i = 1,lstring
+      rev(lstring-i+1:lstring-i+1) = string(i:i)
+    end do
+
+  end function rev
 
 end module strings
