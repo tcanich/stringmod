@@ -1,29 +1,30 @@
 FC=gfortran
-FARGS=-Wall -std=f2003 -fPIC
+FARGS=-Wall -std=f2008 -Wl,-rpath=$(TOP)
 LD=ld
-LDARGS=-G
-LDFLAGS=-L$(TOP)/$(BUILD) -R$(TOP)/$(BUILD)
+TOP=$(PWD)
+LDFLAGS=-G -fPIC -Bdynamic -L$(TOP) 
 MAJV=0
 MINV=1
-TEST=tests/test.f90
 PROG=strings
-BUILD=build
-TOP=/home/tcanich/fortran/stringmod
+LIB=lib$(PROG).so
 
-all: include lib tests
+all: liblink 
 
 include:
 	$(FC) $(FARGS) -c $(TOP)/src/lib/$(PROG).f90
 
-lib:
-	$(LD) $(LDARGS) $(PROG).o -o lib$(PROG).so.$(MAJV).$(MINV)
+lib: include
+	$(LD) $(LDFLAGS) $(PROG).o -o $(LIB).$(MAJV).$(MINV)
 
-test: include lib
-	$(FC) $(FARGS) $(LDFLAGS) -o $(PROG)test $(TOP)/$(TEST) -l$(PROG)
+liblink: lib
+	ln -s $(LIB).$(MAJV).$(MINV) $(LIB)
+
+test: liblink
+	$(FC) $(FARGS) -L$(TOP) -o $(PROG)test $(TOP)/tests/test.f90 -l$(PROG)
+	$(TOP)/$(PROG)test
 
 clean:
-#	rm $(BUILD)/*.mod $(BUILD)/lib$(PROG)*
-	rm *.mod *.o lib$(PROG).so.$(MAJV).$(MINV)
+	rm *.mod *.o 
 
 distclean: clean
-	rm $(PROG)test lib$(PROG).so.$(MAJV).$(MINV)
+	rm $(PROG)test $(LIB).$(MAJV).$(MINV) $(LIB)
